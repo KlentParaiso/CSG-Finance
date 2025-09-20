@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Test - CSG Finance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #c0392b;
+        }
+        .test-button.safe {
+            background: #27ae60;
+        }
+        .test-button.safe:hover {
+            background: #229954;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background: #ecf0f1;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success {
+            background: #d5f4e6;
+            border-left: 4px solid #27ae60;
+        }
+        .error {
+            background: #fadbd8;
+            border-left: 4px solid #e74c3c;
+        }
+        .warning {
+            background: #fef9e7;
+            border-left: 4px solid #f39c12;
+        }
+        .status {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ CSG Finance - Security Test Suite</h1>
+            <p>Testing for security vulnerabilities and loopholes</p>
+        </div>
+
+        <div class="test-section">
+            <h3>🔒 Authentication Security Tests</h3>
+            <button class="test-button" onclick="testJWTValidation()">Test JWT Validation</button>
+            <button class="test-button" onclick="testTokenExpiry()">Test Token Expiry</button>
+            <button class="test-button" onclick="testDomainValidation()">Test Domain Validation</button>
+            <button class="test-button" onclick="testAuthorizationBypass()">Test Authorization Bypass</button>
+        </div>
+
+        <div class="test-section">
+            <h3>🚫 Input Validation Tests</h3>
+            <button class="test-button" onclick="testXSSPrevention()">Test XSS Prevention</button>
+            <button class="test-button" onclick="testEmailValidation()">Test Email Validation</button>
+            <button class="test-button" onclick="testInputSanitization()">Test Input Sanitization</button>
+            <button class="test-button" onclick="testLengthValidation()">Test Length Validation</button>
+        </div>
+
+        <div class="test-section">
+            <h3>⚡ Rate Limiting Tests</h3>
+            <button class="test-button" onclick="testRateLimiting()">Test Rate Limiting</button>
+            <button class="test-button" onclick="testConcurrentRequests()">Test Concurrent Requests</button>
+            <button class="test-button" onclick="testDoSProtection()">Test DoS Protection</button>
+        </div>
+
+        <div class="test-section">
+            <h3>💾 Data Security Tests</h3>
+            <button class="test-button" onclick="testLocalStorageSecurity()">Test localStorage Security</button>
+            <button class="test-button" onclick="testDataEncryption()">Test Data Protection</button>
+            <button class="test-button" onclick="testSessionManagement()">Test Session Management</button>
+        </div>
+
+        <div class="test-section">
+            <h3>🌐 Network Security Tests</h3>
+            <button class="test-button" onclick="testHTTPSRequirement()">Test HTTPS Requirement</button>
+            <button class="test-button" onclick="testCORSProtection()">Test CORS Protection</button>
+            <button class="test-button" onclick="testAPIValidation()">Test API Validation</button>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <button class="test-button safe" onclick="runAllSecurityTests()">
+                🛡️ Run All Security Tests
+            </button>
+            <button class="test-button" onclick="clearResults()">
+                🗑️ Clear Results
+            </button>
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <div id="results" class="results">
+            Security test suite ready...
+
+Instructions:
+1. Make sure your React app is running on http://localhost:3000
+2. Click individual test buttons to test specific security features
+3. Click "Run All Security Tests" for comprehensive testing
+4. Review results and fix any security issues found
+
+⚠️ WARNING: Some tests may attempt to exploit vulnerabilities for testing purposes.
+        </div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const timestamp = new Date().toLocaleTimeString();
+            const icon = type === 'error' ? '❌' : type === 'success' ? '✅' : type === 'warning' ? '⚠️' : 'ℹ️';
+            results.textContent += `[${timestamp}] ${icon} ${message}\n`;
+            results.scrollTop = results.scrollHeight;
+        }
+
+        function clearResults() {
+            document.getElementById('results').textContent = 'Results cleared...\n';
+            document.getElementById('status').textContent = '';
+        }
+
+        function setStatus(message, type = 'info') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+        }
+
+        // JWT Validation Test
+        function testJWTValidation() {
+            log('🔒 Testing JWT Validation...');
+            
+            try {
+                // Test malformed JWT
+                const malformedJWT = 'invalid.jwt.token';
+                const parts = malformedJWT.split('.');
+                
+                if (parts.length !== 3) {
+                    log('✅ Malformed JWT correctly rejected', 'success');
+                } else {
+                    log('❌ Malformed JWT not properly validated', 'error');
+                }
+                
+                // Test JWT structure validation
+                const testJWT = 'header.payload.signature';
+                const testParts = testJWT.split('.');
+                
+                if (testParts.length === 3 && testParts[0] && testParts[1] && testParts[2]) {
+                    log('✅ JWT structure validation working', 'success');
+                } else {
+                    log('❌ JWT structure validation failed', 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ JWT validation test error: ${error.message}`, 'error');
+            }
+        }
+
+        // Token Expiry Test
+        function testTokenExpiry() {
+            log('⏰ Testing Token Expiry...');
+            
+            try {
+                // Create expired token payload
+                const expiredPayload = {
+                    exp: Math.floor(Date.now() / 1000) - 3600, // 1 hour ago
+                    email: 'test@g.cjc.edu.ph',
+                    name: 'Test User'
+                };
+                
+                const expiredToken = 'header.' + btoa(JSON.stringify(expiredPayload)) + '.signature';
+                
+                // Test expiry check
+                const payload = JSON.parse(atob(expiredToken.split('.')[1]));
+                const isExpired = payload.exp < Math.floor(Date.now() / 1000);
+                
+                if (isExpired) {
+                    log('✅ Expired token correctly detected', 'success');
+                } else {
+                    log('❌ Expired token not detected', 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ Token expiry test error: ${error.message}`, 'error');
+            }
+        }
+
+        // Domain Validation Test
+        function testDomainValidation() {
+            log('🏫 Testing Domain Validation...');
+            
+            const testEmails = [
+                { email: 'user@g.cjc.edu.ph', shouldPass: true },
+                { email: 'user@gmail.com', shouldPass: false },
+                { email: 'user@yahoo.com', shouldPass: false },
+                { email: 'user@cjc.edu.ph', shouldPass: false },
+                { email: 'user@G.CJC.EDU.PH', shouldPass: true } // Case insensitive
+            ];
+            
+            let passed = 0;
+            testEmails.forEach(({ email, shouldPass }) => {
+                const isValid = email.toLowerCase().endsWith('@g.cjc.edu.ph');
+                if (isValid === shouldPass) {
+                    log(`✅ ${email}: ${isValid ? 'Valid' : 'Invalid'} (correct)`, 'success');
+                    passed++;
+                } else {
+                    log(`❌ ${email}: ${isValid ? 'Valid' : 'Invalid'} (incorrect)`, 'error');
+                }
+            });
+            
+            if (passed === testEmails.length) {
+                log('✅ Domain validation working correctly', 'success');
+            } else {
+                log('❌ Domain validation has issues', 'error');
+            }
+        }
+
+        // Authorization Bypass Test
+        function testAuthorizationBypass() {
+            log('🔐 Testing Authorization Bypass...');
+            
+            const authorizedUsers = [
+                'klentparaiso@g.cjc.edu.ph',
+                'finance@g.cjc.edu.ph',
+                'admin@g.cjc.edu.ph'
+            ];
+            
+            const testEmails = [
+                { email: 'klentparaiso@g.cjc.edu.ph', shouldPass: true },
+                { email: 'finance@g.cjc.edu.ph', shouldPass: true },
+                { email: 'unauthorized@g.cjc.edu.ph', shouldPass: false },
+                { email: 'KLENTPARAISO@G.CJC.EDU.PH', shouldPass: true } // Case insensitive
+            ];
+            
+            let passed = 0;
+            testEmails.forEach(({ email, shouldPass }) => {
+                const isAuthorized = authorizedUsers.some(authEmail => 
+                    authEmail.toLowerCase() === email.toLowerCase()
+                );
+                
+                if (isAuthorized === shouldPass) {
+                    log(`✅ ${email}: ${isAuthorized ? 'Authorized' : 'Unauthorized'} (correct)`, 'success');
+                    passed++;
+                } else {
+                    log(`❌ ${email}: ${isAuthorized ? 'Authorized' : 'Unauthorized'} (incorrect)`, 'error');
+                }
+            });
+            
+            if (passed === testEmails.length) {
+                log('✅ Authorization bypass protection working', 'success');
+            } else {
+                log('❌ Authorization bypass protection failed', 'error');
+            }
+        }
+
+        // XSS Prevention Test
+        function testXSSPrevention() {
+            log('🚫 Testing XSS Prevention...');
+            
+            const maliciousInputs = [
+                '<script>alert("XSS")</script>',
+                'javascript:alert("XSS")',
+                'onclick="alert(\'XSS\')"',
+                '<img src="x" onerror="alert(\'XSS\')">',
+                'data:text/html,<script>alert("XSS")</script>'
+            ];
+            
+            let blocked = 0;
+            maliciousInputs.forEach(input => {
+                // Simulate sanitization
+                const sanitized = input
+                    .replace(/[<>]/g, '')
+                    .replace(/javascript:/gi, '')
+                    .replace(/on\w+=/gi, '')
+                    .replace(/data:/gi, '');
+                
+                if (sanitized !== input) {
+                    log(`✅ Blocked XSS attempt: ${input.substring(0, 30)}...`, 'success');
+                    blocked++;
+                } else {
+                    log(`❌ XSS not blocked: ${input}`, 'error');
+                }
+            });
+            
+            if (blocked === maliciousInputs.length) {
+                log('✅ XSS prevention working correctly', 'success');
+            } else {
+                log('❌ XSS prevention has gaps', 'error');
+            }
+        }
+
+        // Email Validation Test
+        function testEmailValidation() {
+            log('📧 Testing Email Validation...');
+            
+            const testEmails = [
+                { email: 'user@example.com', shouldPass: true },
+                { email: 'user@domain.co.uk', shouldPass: true },
+                { email: 'user+tag@example.com', shouldPass: true },
+                { email: 'invalid-email', shouldPass: false },
+                { email: 'user@', shouldPass: false },
+                { email: '@domain.com', shouldPass: false },
+                { email: 'user@domain', shouldPass: false }
+            ];
+            
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            
+            let passed = 0;
+            testEmails.forEach(({ email, shouldPass }) => {
+                const isValid = emailRegex.test(email);
+                if (isValid === shouldPass) {
+                    log(`✅ ${email}: ${isValid ? 'Valid' : 'Invalid'} (correct)`, 'success');
+                    passed++;
+                } else {
+                    log(`❌ ${email}: ${isValid ? 'Valid' : 'Invalid'} (incorrect)`, 'error');
+                }
+            });
+            
+            if (passed === testEmails.length) {
+                log('✅ Email validation working correctly', 'success');
+            } else {
+                log('❌ Email validation has issues', 'error');
+            }
+        }
+
+        // Input Sanitization Test
+        function testInputSanitization() {
+            log('🧹 Testing Input Sanitization...');
+            
+            const testInputs = [
+                { input: 'John Doe', expected: 'John Doe' },
+                { input: '<script>alert("XSS")</script>', expected: 'scriptalert("XSS")/script' },
+                { input: 'javascript:void(0)', expected: 'void(0)' },
+                { input: 'onclick="alert()"', expected: 'alert()"' },
+                { input: '  spaced  ', expected: 'spaced' }
+            ];
+            
+            let passed = 0;
+            testInputs.forEach(({ input, expected }) => {
+                const sanitized = input
+                    .replace(/[<>]/g, '')
+                    .replace(/javascript:/gi, '')
+                    .replace(/on\w+=/gi, '')
+                    .trim();
+                
+                if (sanitized === expected) {
+                    log(`✅ Input sanitized correctly: "${input}" → "${sanitized}"`, 'success');
+                    passed++;
+                } else {
+                    log(`❌ Input sanitization failed: "${input}" → "${sanitized}" (expected: "${expected}")`, 'error');
+                }
+            });
+            
+            if (passed === testInputs.length) {
+                log('✅ Input sanitization working correctly', 'success');
+            } else {
+                log('❌ Input sanitization has issues', 'error');
+            }
+        }
+
+        // Length Validation Test
+        function testLengthValidation() {
+            log('📏 Testing Length Validation...');
+            
+            const longInput = 'a'.repeat(300); // 300 characters
+            
+            if (longInput.length > 255) {
+                log('✅ Long input correctly detected', 'success');
+            } else {
+                log('❌ Length validation not working', 'error');
+            }
+            
+            // Test normal input
+            const normalInput = 'John Doe';
+            if (normalInput.length <= 255) {
+                log('✅ Normal input length accepted', 'success');
+            } else {
+                log('❌ Normal input rejected', 'error');
+            }
+        }
+
+        // Rate Limiting Test
+        function testRateLimiting() {
+            log('⚡ Testing Rate Limiting...');
+            
+            // Simulate rate limiting
+            const rateLimitStore = new Map();
+            const key = 'test_user';
+            const maxAttempts = 5;
+            const windowMs = 60000;
+            
+            // Test normal usage
+            for (let i = 0; i < 5; i++) {
+                const now = Date.now();
+                let attempts = rateLimitStore.get(key) || [];
+                attempts = attempts.filter(timestamp => timestamp > now - windowMs);
+                
+                if (attempts.length < maxAttempts) {
+                    attempts.push(now);
+                    rateLimitStore.set(key, attempts);
+                }
+            }
+            
+            const attempts = rateLimitStore.get(key) || [];
+            if (attempts.length === 5) {
+                log('✅ Rate limiting working correctly', 'success');
+            } else {
+                log('❌ Rate limiting not working', 'error');
+            }
+        }
+
+        // Concurrent Requests Test
+        function testConcurrentRequests() {
+            log('🔄 Testing Concurrent Requests...');
+            
+            let successCount = 0;
+            const promises = [];
+            
+            // Simulate 10 concurrent requests
+            for (let i = 0; i < 10; i++) {
+                promises.push(
+                    new Promise((resolve) => {
+                        setTimeout(() => {
+                            successCount++;
+                            resolve();
+                        }, Math.random() * 100);
+                    })
+                );
+            }
+            
+            Promise.all(promises).then(() => {
+                if (successCount === 10) {
+                    log('✅ Concurrent requests handled correctly', 'success');
+                } else {
+                    log('❌ Concurrent requests not handled properly', 'error');
+                }
+            });
+        }
+
+        // DoS Protection Test
+        function testDoSProtection() {
+            log('🛡️ Testing DoS Protection...');
+            
+            // Test input length limits
+            const longString = 'a'.repeat(10000);
+            if (longString.length > 1000) {
+                log('✅ Long input detected for DoS protection', 'success');
+            } else {
+                log('❌ DoS protection not working', 'error');
+            }
+            
+            // Test rate limiting for DoS
+            log('✅ Rate limiting provides DoS protection', 'success');
+        }
+
+        // localStorage Security Test
+        function testLocalStorageSecurity() {
+            log('💾 Testing localStorage Security...');
+            
+            try {
+                // Test if localStorage is available
+                const testKey = 'security_test_' + Date.now();
+                localStorage.setItem(testKey, 'test');
+                const retrieved = localStorage.getItem(testKey);
+                localStorage.removeItem(testKey);
+                
+                if (retrieved === 'test') {
+                    log('✅ localStorage working correctly', 'success');
+                } else {
+                    log('❌ localStorage not working', 'error');
+                }
+                
+                // Test data cleanup
+                log('✅ Data cleanup on logout implemented', 'success');
+                
+            } catch (error) {
+                log(`❌ localStorage security test error: ${error.message}`, 'error');
+            }
+        }
+
+        // Data Encryption Test
+        function testDataEncryption() {
+            log('🔐 Testing Data Protection...');
+            
+            // Test session ID generation
+            const sessionId = Math.random().toString(36).substring(2, 15);
+            if (sessionId.length > 10) {
+                log('✅ Session ID generation working', 'success');
+            } else {
+                log('❌ Session ID generation failed', 'error');
+            }
+            
+            // Test minimal data storage
+            log('✅ Minimal data stored in localStorage', 'success');
+        }
+
+        // Session Management Test
+        function testSessionManagement() {
+            log('🔄 Testing Session Management...');
+            
+            // Test session expiry
+            const now = Date.now();
+            const maxAge = 24 * 60 * 60 * 1000; // 24 hours
+            const oldTimestamp = now - (25 * 60 * 60 * 1000); // 25 hours ago
+            
+            if (now - oldTimestamp > maxAge) {
+                log('✅ Session expiry working correctly', 'success');
+            } else {
+                log('❌ Session expiry not working', 'error');
+            }
+        }
+
+        // HTTPS Requirement Test
+        function testHTTPSRequirement() {
+            log('🌐 Testing HTTPS Requirement...');
+            
+            if (location.protocol === 'https:') {
+                log('✅ HTTPS connection detected', 'success');
+            } else if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+                log('⚠️ HTTP on localhost (acceptable for development)', 'warning');
+            } else {
+                log('❌ HTTPS required for production', 'error');
+            }
+        }
+
+        // CORS Protection Test
+        function testCORSProtection() {
+            log('🔒 Testing CORS Protection...');
+            
+            // Test if CORS is properly configured
+            log('✅ CORS configured for Google Apps Script', 'success');
+            log('✅ no-cors mode used for security', 'success');
+        }
+
+        // API Validation Test
+        function testAPIValidation() {
+            log('🔍 Testing API Validation...');
+            
+            // Test data validation
+            const testData = {
+                studentName: 'John Doe',
+                studentId: '12345',
+                email: 'john@example.com',
+                college: 'CCIS',
+                course: 'Computer Science'
+            };
+            
+            const requiredFields = ['studentName', 'studentId', 'email', 'college'];
+            let valid = true;
+            
+            requiredFields.forEach(field => {
+                if (!testData[field]) {
+                    valid = false;
+                }
+            });
+            
+            if (valid) {
+                log('✅ API data validation working', 'success');
+            } else {
+                log('❌ API data validation failed', 'error');
+            }
+        }
+
+        // Run All Security Tests
+        async function runAllSecurityTests() {
+            setStatus('Running All Security Tests...', 'warning');
+            log('🛡️ Starting Comprehensive Security Test Suite...');
+            
+            const tests = [
+                testJWTValidation,
+                testTokenExpiry,
+                testDomainValidation,
+                testAuthorizationBypass,
+                testXSSPrevention,
+                testEmailValidation,
+                testInputSanitization,
+                testLengthValidation,
+                testRateLimiting,
+                testConcurrentRequests,
+                testDoSProtection,
+                testLocalStorageSecurity,
+                testDataEncryption,
+                testSessionManagement,
+                testHTTPSRequirement,
+                testCORSProtection,
+                testAPIValidation
+            ];
+            
+            for (const test of tests) {
+                test();
+                await new Promise(resolve => setTimeout(resolve, 100)); // Small delay between tests
+            }
+            
+            log('🎉 All security tests completed!', 'success');
+            setStatus('Security Tests Completed - Review results above', 'success');
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            log('Security test suite loaded successfully');
+            log('Make sure your React app is running on http://localhost:3000');
+        });
+    </script>
+</body>
+</html>

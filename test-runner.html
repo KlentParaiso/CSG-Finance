@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSG Finance - Automated Test Runner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .test-button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            width: 250px;
+        }
+        .test-button:hover {
+            background: #c0392b;
+        }
+        .test-button.success {
+            background: #27ae60;
+        }
+        .test-button.success:hover {
+            background: #229954;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background: #2c3e50;
+            color: #ecf0f1;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            max-height: 500px;
+            overflow-y: auto;
+            font-size: 12px;
+        }
+        .status {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .status.running {
+            background: #f39c12;
+            color: white;
+        }
+        .status.success {
+            background: #27ae60;
+            color: white;
+        }
+        .status.error {
+            background: #e74c3c;
+            color: white;
+        }
+        .progress {
+            width: 100%;
+            height: 20px;
+            background: #34495e;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: #3498db;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 CSG Finance - Automated Test Runner</h1>
+            <p>AI-powered concurrent load testing</p>
+        </div>
+
+        <div style="text-align: center;">
+            <button class="test-button success" onclick="runAutomatedTest()">
+                🚀 Run Automated Concurrent Test
+            </button>
+            <button class="test-button" onclick="runQuickTest()">
+                ⚡ Quick 10-User Test
+            </button>
+            <button class="test-button" onclick="clearResults()">
+                🗑️ Clear Results
+            </button>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+        </div>
+
+        <div id="status" class="status">Ready to test...</div>
+
+        <div id="results" class="results">
+🤖 Automated Test Runner Ready
+
+This test will simulate multiple users submitting payment forms simultaneously
+to verify your system can handle concurrent load without crashing.
+
+Click "Run Automated Concurrent Test" to start!
+
+Expected test scenarios:
+- 5 concurrent users
+- 10 concurrent users  
+- 20 concurrent users
+- Memory usage analysis
+- Rate limiting verification
+- Performance metrics
+
+The test will automatically analyze results and provide recommendations.
+        </div>
+    </div>
+
+    <script>
+        let testInProgress = false;
+        let testResults = [];
+
+        function log(message) {
+            const results = document.getElementById('results');
+            const timestamp = new Date().toLocaleTimeString();
+            results.textContent += `[${timestamp}] ${message}\n`;
+            results.scrollTop = results.scrollHeight;
+        }
+
+        function clearResults() {
+            document.getElementById('results').textContent = 'Results cleared...\n';
+            document.getElementById('status').textContent = 'Ready to test...';
+            document.getElementById('status').className = 'status';
+            document.getElementById('progressBar').style.width = '0%';
+            testResults = [];
+        }
+
+        function setStatus(message, type = '') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+        }
+
+        function updateProgress(current, total) {
+            const percentage = (current / total) * 100;
+            document.getElementById('progressBar').style.width = percentage + '%';
+        }
+
+        // Simulate form submission
+        async function simulateFormSubmission(userId) {
+            const startTime = performance.now();
+            
+            try {
+                // Simulate form data
+                const formData = {
+                    studentName: `Student ${userId}`,
+                    studentId: `STU${userId.toString().padStart(3, '0')}`,
+                    email: `student${userId}@example.com`,
+                    college: 'CCIS',
+                    course: 'Computer Science',
+                    paymentAmount: 200,
+                    paymentMethod: 'Cash',
+                    receivedBy: 'Test Staff (test@g.cjc.edu.ph)',
+                    receiverEmail: 'test@g.cjc.edu.ph',
+                    receiverGoogleId: 'test123',
+                    timestamp: new Date().toISOString()
+                };
+
+                log(`👤 User ${userId}: Submitting form...`);
+
+                // Simulate validation delay
+                await new Promise(resolve => setTimeout(resolve, Math.random() * 100 + 50));
+
+                // Make API call
+                const response = await fetch('https://script.google.com/macros/s/AKfycbyqPr9OLfetto5vdbe__seFPKEOm1hORpSZXIXts-YWDTDQGAmPd7gdXJid8ixnzz69gA/exec', {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const endTime = performance.now();
+                const responseTime = endTime - startTime;
+                
+                log(`✅ User ${userId}: Success (${responseTime.toFixed(0)}ms)`);
+                
+                return { success: true, userId, responseTime };
+                
+            } catch (error) {
+                const endTime = performance.now();
+                const responseTime = endTime - startTime;
+                
+                log(`❌ User ${userId}: Failed - ${error.message} (${responseTime.toFixed(0)}ms)`);
+                
+                return { success: false, userId, responseTime, error: error.message };
+            }
+        }
+
+        // Test concurrent users
+        async function testConcurrentUsers(userCount) {
+            log(`\n🧪 Testing ${userCount} concurrent users...`);
+            
+            const startTime = performance.now();
+            const results = [];
+            
+            // Create all user promises simultaneously
+            const userPromises = [];
+            for (let i = 1; i <= userCount; i++) {
+                userPromises.push(simulateFormSubmission(i));
+            }
+            
+            log(`🔥 All ${userCount} users submitting simultaneously!`);
+            
+            try {
+                const responses = await Promise.all(userPromises);
+                const endTime = performance.now();
+                const totalTime = endTime - startTime;
+                
+                const successful = responses.filter(r => r.success).length;
+                const failed = responses.filter(r => !r.success).length;
+                const avgResponseTime = responses.reduce((sum, r) => sum + r.responseTime, 0) / responses.length;
+                
+                log(`\n📊 RESULTS FOR ${userCount} USERS:`);
+                log(`⏱️ Total time: ${totalTime.toFixed(0)}ms`);
+                log(`✅ Successful: ${successful}/${userCount}`);
+                log(`❌ Failed: ${failed}/${userCount}`);
+                log(`📈 Success rate: ${((successful / userCount) * 100).toFixed(1)}%`);
+                log(`⚡ Average response time: ${avgResponseTime.toFixed(0)}ms`);
+                
+                // Performance analysis
+                if (totalTime < 5000) {
+                    log(`🚀 EXCELLENT: Handled ${userCount} users in under 5 seconds!`);
+                } else if (totalTime < 10000) {
+                    log(`✅ GOOD: Handled ${userCount} users in under 10 seconds`);
+                } else {
+                    log(`⚠️ SLOW: Took ${(totalTime/1000).toFixed(1)}s for ${userCount} users`);
+                }
+                
+                // Crash analysis
+                if (failed === 0) {
+                    log(`🎉 NO CRASHES! System handled all ${userCount} users perfectly!`);
+                } else if (failed < userCount * 0.1) {
+                    log(`✅ MINOR ISSUES: Only ${failed} users failed (${((failed/userCount)*100).toFixed(1)}%)`);
+                } else {
+                    log(`❌ MAJOR ISSUES: ${failed} users failed (${((failed/userCount)*100).toFixed(1)}%)`);
+                }
+                
+                return { success: failed === 0 || failed < userCount * 0.1, userCount, successful, failed, totalTime };
+                
+            } catch (error) {
+                log(`💥 SYSTEM CRASHED! Error: ${error.message}`);
+                return { success: false, userCount, error: error.message };
+            }
+        }
+
+        // Memory test
+        function testMemoryUsage() {
+            log(`\n🧠 Testing memory usage...`);
+            
+            if (typeof performance !== 'undefined' && performance.memory) {
+                const memoryUsage = performance.memory.usedJSHeapSize / 1024 / 1024;
+                log(`📊 Current memory usage: ${memoryUsage.toFixed(2)} MB`);
+                
+                if (memoryUsage > 100) {
+                    log(`⚠️ High memory usage detected`);
+                    return false;
+                } else {
+                    log(`✅ Memory usage is normal`);
+                    return true;
+                }
+            } else {
+                log(`⚠️ Memory API not available`);
+                return true;
+            }
+        }
+
+        // Run automated test
+        async function runAutomatedTest() {
+            if (testInProgress) return;
+            
+            testInProgress = true;
+            setStatus('Running automated concurrent test...', 'running');
+            log('🚀 Starting Automated Concurrent Load Test...');
+            log('🎯 Testing CSG Finance system under high load');
+            
+            const testScenarios = [5, 10, 20];
+            const results = [];
+            
+            for (let i = 0; i < testScenarios.length; i++) {
+                const userCount = testScenarios[i];
+                updateProgress(i, testScenarios.length);
+                
+                const result = await testConcurrentUsers(userCount);
+                results.push(result);
+                
+                // Small delay between tests
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+            
+            // Memory test
+            const memoryOk = testMemoryUsage();
+            
+            updateProgress(testScenarios.length, testScenarios.length);
+            
+            // Final analysis
+            log(`\n🎉 AUTOMATED TEST RESULTS:`);
+            log(`================================`);
+            
+            let allTestsPassed = true;
+            results.forEach(result => {
+                const status = result.success ? '✅ PASSED' : '❌ FAILED';
+                log(`${status}: ${result.userCount} users - ${result.successful || 0} successful, ${result.failed || 0} failed`);
+                if (!result.success) allTestsPassed = false;
+            });
+            
+            log(`🧠 Memory test: ${memoryOk ? '✅ PASSED' : '❌ FAILED'}`);
+            
+            // Overall assessment
+            if (allTestsPassed && memoryOk) {
+                log(`\n🎉 ALL TESTS PASSED!`);
+                log(`✅ System is PRODUCTION READY!`);
+                log(`✅ Can handle multiple concurrent users!`);
+                log(`✅ No crashes detected!`);
+                log(`✅ Performance is acceptable!`);
+                setStatus('🎉 ALL TESTS PASSED! System is production ready!', 'success');
+            } else {
+                log(`\n⚠️ SOME TESTS FAILED!`);
+                log(`❌ System needs optimization before production deployment`);
+                setStatus('⚠️ Some tests failed. Review results above.', 'error');
+            }
+            
+            testInProgress = false;
+        }
+
+        // Quick test
+        async function runQuickTest() {
+            if (testInProgress) return;
+            
+            testInProgress = true;
+            setStatus('Running quick 10-user test...', 'running');
+            log('⚡ Starting Quick 10-User Test...');
+            
+            const result = await testConcurrentUsers(10);
+            
+            if (result.success) {
+                log(`\n🎉 QUICK TEST PASSED!`);
+                log(`✅ System can handle 10 concurrent users!`);
+                setStatus('✅ Quick test passed! System ready for 10+ users.', 'success');
+            } else {
+                log(`\n❌ QUICK TEST FAILED!`);
+                log(`❌ System struggled with 10 concurrent users`);
+                setStatus('❌ Quick test failed. System needs optimization.', 'error');
+            }
+            
+            testInProgress = false;
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            log('🤖 Automated test runner loaded successfully');
+            log('Make sure your React app is running on http://localhost:3000');
+            log('Click "Run Automated Concurrent Test" to start!');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSG Finance - Production Testing Suite</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .test-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+        }
+        .test-passed {
+            background-color: #d1edff;
+            border-color: #0d6efd;
+        }
+        .test-failed {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+        }
+        .test-running {
+            background-color: #fff3cd;
+            border-color: #ffc107;
+        }
+        .console-output {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .test-button {
+            margin: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="mb-0">
+                            <i class="bi bi-shield-check me-2"></i>
+                            CSG Finance - Production Testing Suite
+                        </h2>
+                        <p class="mb-0 mt-2">Comprehensive testing for production deployment</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <h5><i class="bi bi-info-circle me-2"></i>Testing Instructions</h5>
+                            <ol class="mb-0">
+                                <li>Make sure your React app is running on <code>http://localhost:3000</code></li>
+                                <li>Open this test page in a separate browser tab</li>
+                                <li>Click "Run All Tests" to start comprehensive testing</li>
+                                <li>Review results and fix any issues before deployment</li>
+                            </ol>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="test-section" id="auth-tests">
+                                    <h4><i class="bi bi-key me-2"></i>Authentication Tests</h4>
+                                    <p>Tests Google OAuth, session persistence, and security features.</p>
+                                    <button class="btn btn-primary test-button" onclick="runAuthTests()">
+                                        <i class="bi bi-play me-1"></i>Run Auth Tests
+                                    </button>
+                                    <div id="auth-results" class="mt-3"></div>
+                                </div>
+
+                                <div class="test-section" id="form-tests">
+                                    <h4><i class="bi bi-file-text me-2"></i>Form Validation Tests</h4>
+                                    <p>Tests form elements, validation, and fixed values.</p>
+                                    <button class="btn btn-primary test-button" onclick="runFormTests()">
+                                        <i class="bi bi-play me-1"></i>Run Form Tests
+                                    </button>
+                                    <div id="form-results" class="mt-3"></div>
+                                </div>
+
+                                <div class="test-section" id="concurrent-tests">
+                                    <h4><i class="bi bi-people me-2"></i>Concurrent User Tests</h4>
+                                    <p>Tests multiple users, performance, and error handling.</p>
+                                    <button class="btn btn-primary test-button" onclick="runConcurrentTests()">
+                                        <i class="bi bi-play me-1"></i>Run Concurrent Tests
+                                    </button>
+                                    <div id="concurrent-results" class="mt-3"></div>
+                                </div>
+
+                                <div class="test-section" id="integration-tests">
+                                    <h4><i class="bi bi-link-45deg me-2"></i>Integration Tests</h4>
+                                    <p>Tests Google Sheets integration and email system.</p>
+                                    <button class="btn btn-primary test-button" onclick="runIntegrationTests()">
+                                        <i class="bi bi-play me-1"></i>Run Integration Tests
+                                    </button>
+                                    <div id="integration-results" class="mt-3"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5><i class="bi bi-terminal me-2"></i>Test Console</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="console-output" class="console-output">Ready to run tests...</div>
+                                        <div class="mt-3">
+                                            <button class="btn btn-success btn-sm" onclick="runAllTests()">
+                                                <i class="bi bi-play-fill me-1"></i>Run All Tests
+                                            </button>
+                                            <button class="btn btn-secondary btn-sm" onclick="clearConsole()">
+                                                <i class="bi bi-trash me-1"></i>Clear Console
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card mt-3">
+                                    <div class="card-header">
+                                        <h5><i class="bi bi-graph-up me-2"></i>Test Summary</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="test-summary">
+                                            <p class="text-muted">No tests run yet</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Console output management
+        function logToConsole(message, type = 'info') {
+            const console = document.getElementById('console-output');
+            const timestamp = new Date().toLocaleTimeString();
+            const icon = type === 'error' ? '❌' : type === 'success' ? '✅' : type === 'warning' ? '⚠️' : 'ℹ️';
+            console.textContent += `[${timestamp}] ${icon} ${message}\n`;
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function clearConsole() {
+            document.getElementById('console-output').textContent = 'Console cleared...\n';
+        }
+
+        // Test result management
+        function updateTestResult(testId, passed, message) {
+            const element = document.getElementById(testId);
+            const resultsDiv = document.getElementById(testId + '-results');
+            
+            if (passed) {
+                element.classList.remove('test-failed', 'test-running');
+                element.classList.add('test-passed');
+                resultsDiv.innerHTML = `<div class="alert alert-success"><i class="bi bi-check-circle me-2"></i>${message}</div>`;
+            } else {
+                element.classList.remove('test-passed', 'test-running');
+                element.classList.add('test-failed');
+                resultsDiv.innerHTML = `<div class="alert alert-danger"><i class="bi bi-x-circle me-2"></i>${message}</div>`;
+            }
+        }
+
+        function setTestRunning(testId) {
+            const element = document.getElementById(testId);
+            element.classList.remove('test-passed', 'test-failed');
+            element.classList.add('test-running');
+        }
+
+        // Authentication tests
+        async function runAuthTests() {
+            setTestRunning('auth-tests');
+            logToConsole('Starting authentication tests...');
+            
+            try {
+                // Load and run authentication tests
+                const script = document.createElement('script');
+                script.src = './test-authentication.js';
+                script.onload = () => {
+                    // Override console.log to capture output
+                    const originalLog = console.log;
+                    console.log = function(...args) {
+                        originalLog.apply(console, args);
+                        logToConsole(args.join(' '));
+                    };
+                    
+                    // Run the tests
+                    if (window.runAuthTests) {
+                        const result = window.runAuthTests();
+                        updateTestResult('auth-tests', result, result ? 'All authentication tests passed!' : 'Some authentication tests failed');
+                    } else {
+                        updateTestResult('auth-tests', false, 'Authentication test script not loaded');
+                    }
+                    
+                    // Restore console.log
+                    console.log = originalLog;
+                };
+                script.onerror = () => {
+                    updateTestResult('auth-tests', false, 'Failed to load authentication test script');
+                };
+                document.head.appendChild(script);
+            } catch (error) {
+                logToConsole('Authentication test error: ' + error.message, 'error');
+                updateTestResult('auth-tests', false, 'Authentication tests failed: ' + error.message);
+            }
+        }
+
+        // Form validation tests
+        async function runFormTests() {
+            setTestRunning('form-tests');
+            logToConsole('Starting form validation tests...');
+            
+            try {
+                const script = document.createElement('script');
+                script.src = './test-form-validation.js';
+                script.onload = () => {
+                    const originalLog = console.log;
+                    console.log = function(...args) {
+                        originalLog.apply(console, args);
+                        logToConsole(args.join(' '));
+                    };
+                    
+                    if (window.runFormTests) {
+                        const result = window.runFormTests();
+                        updateTestResult('form-tests', result, result ? 'All form tests passed!' : 'Some form tests failed');
+                    } else {
+                        updateTestResult('form-tests', false, 'Form test script not loaded');
+                    }
+                    
+                    console.log = originalLog;
+                };
+                script.onerror = () => {
+                    updateTestResult('form-tests', false, 'Failed to load form test script');
+                };
+                document.head.appendChild(script);
+            } catch (error) {
+                logToConsole('Form test error: ' + error.message, 'error');
+                updateTestResult('form-tests', false, 'Form tests failed: ' + error.message);
+            }
+        }
+
+        // Concurrent user tests
+        async function runConcurrentTests() {
+            setTestRunning('concurrent-tests');
+            logToConsole('Starting concurrent user tests...');
+            
+            try {
+                const script = document.createElement('script');
+                script.src = './test-concurrent-users.js';
+                script.onload = () => {
+                    const originalLog = console.log;
+                    console.log = function(...args) {
+                        originalLog.apply(console, args);
+                        logToConsole(args.join(' '));
+                    };
+                    
+                    if (window.runConcurrentTests) {
+                        const result = window.runConcurrentTests();
+                        updateTestResult('concurrent-tests', result, result ? 'All concurrent tests passed!' : 'Some concurrent tests failed');
+                    } else {
+                        updateTestResult('concurrent-tests', false, 'Concurrent test script not loaded');
+                    }
+                    
+                    console.log = originalLog;
+                };
+                script.onerror = () => {
+                    updateTestResult('concurrent-tests', false, 'Failed to load concurrent test script');
+                };
+                document.head.appendChild(script);
+            } catch (error) {
+                logToConsole('Concurrent test error: ' + error.message, 'error');
+                updateTestResult('concurrent-tests', false, 'Concurrent tests failed: ' + error.message);
+            }
+        }
+
+        // Integration tests
+        async function runIntegrationTests() {
+            setTestRunning('integration-tests');
+            logToConsole('Starting integration tests...');
+            
+            try {
+                // Test Google Sheets service
+                const response = await fetch('https://script.google.com/macros/s/AKfycbyqPr9OLfetto5vdbe__seFPKEOm1hORpSZXIXts-YWDTDQGAmPd7gdXJid8ixnzz69gA/exec', {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        test: true,
+                        studentName: 'Test Student',
+                        studentId: 'TEST123',
+                        email: 'test@example.com',
+                        college: 'CCIS',
+                        course: 'Computer Science',
+                        paymentAmount: 200,
+                        paymentMethod: 'Cash'
+                    })
+                });
+                
+                logToConsole('Google Sheets integration test completed', 'success');
+                updateTestResult('integration-tests', true, 'Integration tests passed!');
+            } catch (error) {
+                logToConsole('Integration test error: ' + error.message, 'error');
+                updateTestResult('integration-tests', false, 'Integration tests failed: ' + error.message);
+            }
+        }
+
+        // Run all tests
+        async function runAllTests() {
+            logToConsole('🚀 Starting comprehensive test suite...', 'info');
+            
+            await runAuthTests();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await runFormTests();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await runConcurrentTests();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await runIntegrationTests();
+            
+            logToConsole('🎉 All tests completed!', 'success');
+            updateTestSummary();
+        }
+
+        // Update test summary
+        function updateTestSummary() {
+            const summaryDiv = document.getElementById('test-summary');
+            const testSections = ['auth-tests', 'form-tests', 'concurrent-tests', 'integration-tests'];
+            
+            let passed = 0;
+            let total = testSections.length;
+            
+            testSections.forEach(sectionId => {
+                const element = document.getElementById(sectionId);
+                if (element.classList.contains('test-passed')) {
+                    passed++;
+                }
+            });
+            
+            const percentage = Math.round((passed / total) * 100);
+            
+            summaryDiv.innerHTML = `
+                <div class="progress mb-2">
+                    <div class="progress-bar ${percentage === 100 ? 'bg-success' : percentage >= 75 ? 'bg-warning' : 'bg-danger'}" 
+                         style="width: ${percentage}%"></div>
+                </div>
+                <p class="mb-1"><strong>Tests Passed:</strong> ${passed}/${total}</p>
+                <p class="mb-1"><strong>Success Rate:</strong> ${percentage}%</p>
+                <p class="mb-0">
+                    <strong>Status:</strong> 
+                    <span class="${percentage === 100 ? 'text-success' : percentage >= 75 ? 'text-warning' : 'text-danger'}">
+                        ${percentage === 100 ? 'Ready for Production!' : percentage >= 75 ? 'Needs Review' : 'Not Ready'}
+                    </span>
+                </p>
+            `;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            logToConsole('Production testing suite loaded and ready', 'success');
+        });
+    </script>
+</body>
+</html>

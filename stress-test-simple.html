@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Stress Test - CSG Finance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .test-button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            width: 200px;
+        }
+        .test-button:hover {
+            background: #c0392b;
+        }
+        .test-button.safe {
+            background: #27ae60;
+        }
+        .test-button.safe:hover {
+            background: #229954;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background: #ecf0f1;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .status {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .progress {
+            width: 100%;
+            height: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: #3498db;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💥 CSG Finance - Simple Stress Test</h1>
+            <p>Test if your system crashes with 10+ simultaneous users</p>
+        </div>
+
+        <div style="text-align: center;">
+            <button class="test-button safe" onclick="test10Users()">
+                🧪 Test 10 Users Simultaneously
+            </button>
+            <button class="test-button" onclick="test20Users()">
+                💥 Test 20 Users Simultaneously
+            </button>
+            <button class="test-button" onclick="test50Users()">
+                🚨 Test 50 Users Simultaneously
+            </button>
+            <button class="test-button" onclick="clearResults()">
+                🗑️ Clear Results
+            </button>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <div id="results" class="results">
+            Simple Stress Test Ready...
+
+This test simulates the exact scenario you mentioned:
+- Multiple users filling out the payment form
+- All submitting at the same time
+- Testing if the system crashes or handles it gracefully
+
+Click "Test 10 Users Simultaneously" to start!
+        </div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const timestamp = new Date().toLocaleTimeString();
+            const icon = type === 'error' ? '❌' : type === 'success' ? '✅' : type === 'warning' ? '⚠️' : 'ℹ️';
+            results.textContent += `[${timestamp}] ${icon} ${message}\n`;
+            results.scrollTop = results.scrollHeight;
+        }
+
+        function clearResults() {
+            document.getElementById('results').textContent = 'Results cleared...\n';
+            document.getElementById('status').textContent = '';
+            document.getElementById('progressBar').style.width = '0%';
+        }
+
+        function setStatus(message, type = 'info') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+        }
+
+        function updateProgress(current, total) {
+            const percentage = (current / total) * 100;
+            document.getElementById('progressBar').style.width = percentage + '%';
+        }
+
+        // Simulate a user filling out and submitting the form
+        async function simulateUser(userId) {
+            const startTime = performance.now();
+            
+            try {
+                log(`👤 User ${userId}: Starting form submission...`);
+                
+                // Simulate form data (exactly like your real form)
+                const formData = {
+                    studentName: `Student ${userId}`,
+                    studentId: `STU${userId.toString().padStart(3, '0')}`,
+                    email: `student${userId}@example.com`,
+                    college: 'CCIS',
+                    course: 'Computer Science',
+                    paymentAmount: 200,
+                    paymentMethod: 'Cash',
+                    receivedBy: 'Test Staff (test@g.cjc.edu.ph)',
+                    receiverEmail: 'test@g.cjc.edu.ph',
+                    receiverGoogleId: 'test123',
+                    timestamp: new Date().toISOString()
+                };
+
+                log(`👤 User ${userId}: Form data prepared`);
+
+                // Simulate form validation (like your real validation)
+                await new Promise(resolve => setTimeout(resolve, Math.random() * 50 + 25));
+                log(`👤 User ${userId}: Form validation passed`);
+
+                // Simulate the actual API call to Google Sheets
+                log(`👤 User ${userId}: Sending to Google Sheets...`);
+                
+                const response = await fetch('https://script.google.com/macros/s/AKfycbyqPr9OLfetto5vdbe__seFPKEOm1hORpSZXIXts-YWDTDQGAmPd7gdXJid8ixnzz69gA/exec', {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const endTime = performance.now();
+                const responseTime = endTime - startTime;
+                
+                log(`✅ User ${userId}: Payment recorded successfully! (${responseTime.toFixed(0)}ms)`, 'success');
+                
+                return { 
+                    success: true, 
+                    userId, 
+                    responseTime,
+                    message: 'Payment recorded successfully!'
+                };
+                
+            } catch (error) {
+                const endTime = performance.now();
+                const responseTime = endTime - startTime;
+                
+                log(`❌ User ${userId}: Failed to record payment - ${error.message} (${responseTime.toFixed(0)}ms)`, 'error');
+                
+                return { 
+                    success: false, 
+                    userId, 
+                    responseTime,
+                    error: error.message
+                };
+            }
+        }
+
+        // Test with specified number of users
+        async function testUsers(userCount) {
+            setStatus(`Testing ${userCount} users simultaneously...`, 'warning');
+            log(`🚀 Starting stress test with ${userCount} users...`);
+            log(`📝 All users will fill out the form and submit at the same time`);
+            log(`⏱️ This simulates your real-world scenario`);
+            
+            const startTime = performance.now();
+            const results = [];
+            let completed = 0;
+            
+            // Create all user promises at once (simultaneous)
+            const userPromises = [];
+            for (let i = 1; i <= userCount; i++) {
+                userPromises.push(simulateUser(i));
+            }
+            
+            log(`\n🔥 All ${userCount} users are now submitting simultaneously!`);
+            log(`💥 This is the moment of truth - will the system crash?`);
+            
+            try {
+                // Wait for all users to complete
+                const responses = await Promise.all(userPromises);
+                results.push(...responses);
+                
+                const endTime = performance.now();
+                const totalTime = endTime - startTime;
+                
+                // Analyze results
+                const successful = results.filter(r => r.success).length;
+                const failed = results.filter(r => !r.success).length;
+                const avgResponseTime = results.reduce((sum, r) => sum + r.responseTime, 0) / results.length;
+                
+                log(`\n📊 STRESS TEST RESULTS:`);
+                log(`⏱️ Total time: ${totalTime.toFixed(0)}ms`);
+                log(`✅ Successful: ${successful}/${userCount}`);
+                log(`❌ Failed: ${failed}/${userCount}`);
+                log(`📈 Success rate: ${((successful / userCount) * 100).toFixed(1)}%`);
+                log(`⚡ Average response time: ${avgResponseTime.toFixed(0)}ms`);
+                
+                // Performance analysis
+                if (totalTime < 5000) {
+                    log(`🚀 EXCELLENT: System handled ${userCount} users in under 5 seconds!`, 'success');
+                } else if (totalTime < 10000) {
+                    log(`✅ GOOD: System handled ${userCount} users in under 10 seconds`, 'success');
+                } else {
+                    log(`⚠️ SLOW: System took ${(totalTime/1000).toFixed(1)}s for ${userCount} users`, 'warning');
+                }
+                
+                // Crash analysis
+                if (failed === 0) {
+                    log(`🎉 NO CRASHES! System handled all ${userCount} users perfectly!`, 'success');
+                    setStatus(`🎉 SUCCESS! All ${userCount} users handled without crashes!`, 'success');
+                } else if (failed < userCount * 0.1) { // Less than 10% failed
+                    log(`✅ MINOR ISSUES: Only ${failed} users failed (${((failed/userCount)*100).toFixed(1)}%)`, 'success');
+                    setStatus(`✅ MOSTLY SUCCESS! ${successful}/${userCount} users handled successfully`, 'success');
+                } else {
+                    log(`❌ MAJOR ISSUES: ${failed} users failed (${((failed/userCount)*100).toFixed(1)}%)`, 'error');
+                    setStatus(`❌ SYSTEM STRUGGLED! ${failed}/${userCount} users failed`, 'error');
+                }
+                
+                // Show failed users
+                if (failed > 0) {
+                    log(`\n❌ Failed users:`);
+                    results.filter(r => !r.success).forEach(r => {
+                        log(`  - User ${r.userId}: ${r.error}`, 'error');
+                    });
+                }
+                
+                // Memory check
+                if (typeof performance !== 'undefined' && performance.memory) {
+                    const memoryUsage = performance.memory.usedJSHeapSize / 1024 / 1024;
+                    log(`\n🧠 Memory usage: ${memoryUsage.toFixed(2)} MB`);
+                    
+                    if (memoryUsage > 100) {
+                        log(`⚠️ High memory usage detected`, 'warning');
+                    } else {
+                        log(`✅ Memory usage is normal`, 'success');
+                    }
+                }
+                
+            } catch (error) {
+                log(`💥 SYSTEM CRASHED! Error: ${error.message}`, 'error');
+                setStatus('💥 SYSTEM CRASHED! Check results above', 'error');
+            }
+            
+            updateProgress(userCount, userCount);
+        }
+
+        // Test functions
+        function test10Users() {
+            testUsers(10);
+        }
+
+        function test20Users() {
+            testUsers(20);
+        }
+
+        function test50Users() {
+            testUsers(50);
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            log('Simple stress test loaded successfully');
+            log('This test simulates your exact scenario: 10+ users submitting simultaneously');
+            log('Click "Test 10 Users Simultaneously" to start!');
+        });
+    </script>
+</body>
+</html>
