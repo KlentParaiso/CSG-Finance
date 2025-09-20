@@ -21,6 +21,20 @@ This manual will guide you through using the CSG Finance payment tracking system
 - Only authorized staff members can access the system
 - If you can't sign in, contact the administrator
 
+## 📊 **Daily Statistics Dashboard**
+
+### **Statistics Overview**
+The system now includes a real-time statistics dashboard that shows:
+- **Payments Today** - Number of payments and total amount collected today
+- **All-Time Total** - Total payments and amount collected by your account
+- **Previous Days** - Payments and amounts from previous days
+
+### **How Statistics Work**
+- Statistics update automatically when you process payments
+- Data is pulled from the Google Sheets in real-time
+- Each staff member sees only their own payment statistics
+- Statistics reset daily but maintain all-time totals
+
 ## 💳 **Processing Payments**
 
 ### **Payment Form Overview**
@@ -40,8 +54,10 @@ The payment form includes the following fields:
 ```
 Student Name: [Enter full name]
 Race Bib Number: [Enter race bib number]
-Email: [Enter email address]
+Email: [Enter username only - @g.cjc.edu.ph is added automatically]
 ```
+
+**Note:** For the email field, you only need to enter the username (e.g., "john.doe"). The system will automatically add "@g.cjc.edu.ph" to complete the email address.
 
 #### **2. Select College and Course**
 - Choose from the dropdown menu:
@@ -89,7 +105,7 @@ The student will automatically receive an email with:
 
 #### **"Invalid Email Format" Error**
 - **Cause:** Student email is not properly formatted
-- **Solution:** Check email format (must include @domain.com)
+- **Solution:** Enter only the username (e.g., "john.doe"). The system automatically adds "@g.cjc.edu.ph"
 
 #### **"Race Bib Number Invalid" Error**
 - **Cause:** Race bib number format is incorrect
@@ -177,6 +193,8 @@ You're now ready to use the CSG Finance Fun Run Payment Tracker. The system is d
 - **Login:** Use school Google account
 - **Payment Amount:** Always ₱180
 - **Payment Method:** Always Cash
+- **Email:** Enter username only (@g.cjc.edu.ph auto-added)
+- **Statistics:** Real-time dashboard with daily totals
 - **Session:** 24 hours
 - **Support:** Contact IT or administrator
 

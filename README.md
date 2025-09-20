@@ -5,8 +5,9 @@ A secure, production-ready payment tracking system for CSG Fun Run events at CJC
 ## 🚀 Features
 
 - **🔐 Secure Authentication** - Google OAuth with school domain validation
-- **💳 Payment Processing** - Fixed ₱200 cash payments for Fun Run registration
+- **💳 Payment Processing** - Fixed ₱180 cash payments for Fun Run registration
 - **📊 Real-time Tracking** - Google Sheets integration with automated email confirmations
+- **📈 Daily Statistics** - Real-time payment tracking and statistics dashboard
 - **👥 Multi-user Support** - Handles 10+ concurrent users without crashes
 - **🛡️ Security Hardened** - XSS protection, rate limiting, input validation
 - **📱 Responsive Design** - Works on desktop, tablet, and mobile devices
@@ -123,9 +124,11 @@ CSG-Finance/
 ├── src/
 │   ├── components/
 │   │   ├── SecurePaymentApp.js    # Main authentication component
-│   │   └── StudentForm.js         # Payment form component
+│   │   ├── StudentForm.js         # Payment form component
+│   │   └── DailyStats.js          # Daily statistics dashboard
 │   ├── services/
-│   │   └── googleSheetsService.js # Google Sheets integration
+│   │   ├── googleSheetsService.js # Google Sheets integration
+│   │   └── authService.js         # Authentication service
 │   └── utils/
 │       └── security.js            # Security utilities
 ├── public/
