@@ -62,7 +62,7 @@ function testConcurrentFormSubmissions() {
     {
       studentName: 'Student 1',
       studentId: 'STU001',
-      email: 'student1@example.com',
+      email: 'student1@g.cjc.edu.ph',
       college: 'CCIS',
       course: 'Computer Science',
       paymentAmount: 200,
@@ -71,7 +71,7 @@ function testConcurrentFormSubmissions() {
     {
       studentName: 'Student 2',
       studentId: 'STU002',
-      email: 'student2@example.com',
+      email: 'student2@g.cjc.edu.ph',
       college: 'CABE',
       course: 'Business Administration',
       paymentAmount: 200,
@@ -80,7 +80,7 @@ function testConcurrentFormSubmissions() {
     {
       studentName: 'Student 3',
       studentId: 'STU003',
-      email: 'student3@example.com',
+      email: 'student3@g.cjc.edu.ph',
       college: 'CHS',
       course: 'Nursing',
       paymentAmount: 200,
@@ -259,7 +259,7 @@ function testPerformanceUnderLoad() {
     const testData = {
       studentName: `Student ${i}`,
       studentId: `ID${i}`,
-      email: `student${i}@example.com`,
+      email: `student${i}@g.cjc.edu.ph`,
       college: 'CCIS',
       course: 'Computer Science'
     };

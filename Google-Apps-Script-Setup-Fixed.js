@@ -101,7 +101,7 @@ function getOrCreateCollegeSheet(collegeName) {
     const headers = [
       'Timestamp',
       'Student Name', 
-      'Student ID',
+      'Race Bib Number',
       'Email',
       'College',
       'Course/Program',
@@ -168,7 +168,7 @@ function saveToMasterSheet(data) {
     const headers = [
       'Timestamp',
       'Student Name',
-      'Student ID', 
+      'Race Bib Number', 
       'Email',
       'College',
       'Course/Program',
@@ -225,16 +225,28 @@ function sendEmailConfirmation(data) {
     const staffEmail = data.receiverEmail || 'Not specified';
     
     const body = `
-🎉 Your payment of ₱${parseFloat(data.paymentAmount).toLocaleString('en-PH', { minimumFractionDigits: 2 })} has been successfully received and verified.
-You are now officially registered for the Fun Run Event!
+Dear ${data.studentName},
 
-Please keep this email as your official receipt and proof of registration. 📧
+Thank you for your payment towards the Fun Run event! 🎉
 
-If you have any questions regarding your payment, feel free to contact me at:
-📩 ${staffEmail}
+PAYMENT CONFIRMATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+👤 Student Name: ${data.studentName}
+🆔 Race Bib Number: ${data.studentId}
+🏛️ College: ${DEPARTMENTS[data.college] || data.college}
+📚 Course/Program: ${data.course}
+💰 Payment Amount: ₱${parseFloat(data.paymentAmount).toLocaleString('en-PH', { minimumFractionDigits: 2 })}
+💳 Payment Method: ${data.paymentMethod}
+📅 Date & Time: ${data.submittedAt || new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila' })}
+✅ Received by: ${staffName}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Thank you for joining the Fun Run!
-We look forward to seeing you at the event. 🏃‍♀️💨
+Your payment of ₱${parseFloat(data.paymentAmount).toLocaleString('en-PH', { minimumFractionDigits: 2 })} has been successfully received and verified.
+You are now officially registered for the Fun Run event. Please keep this email as your confirmation receipt. 📧
+
+If you have any questions regarding your payment, feel free to contact me at ${staffEmail}.
+
+Thank you once again for your participation. We look forward to seeing you at the Fun Run! 🏃‍♀️💨
 
 Best regards,
 ${staffName}
@@ -380,9 +392,10 @@ function testPaymentSystem() {
     email: "test@example.com",
     college: "CCIS",
     course: "Computer Science",
-    paymentAmount: 500.00,
+    paymentAmount: 180.00,
     paymentMethod: "Cash",
     receivedBy: "Mr. Mark Santos - CCIS Representative",
+    receiverEmail: "test@example.com",
     timestamp: new Date().toISOString(),
     submittedAt: new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila' })
   };
@@ -425,6 +438,8 @@ function initializeSpreadsheet() {
     course: "Initial Setup",
     paymentAmount: 0,
     paymentMethod: "System",
+    receivedBy: "System",
+    receiverEmail: "system@example.com",
     timestamp: new Date().toISOString(),
     submittedAt: new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila' })
   });
@@ -449,12 +464,8 @@ function getDailyStats(userEmail, date) {
     const dateIndex = headers.indexOf('Date Submitted');
     const amountIndex = headers.indexOf('Payment Amount (₱)');
     
-    console.log('Headers found:', headers);
-    console.log('Looking for userEmail:', userEmail);
-    console.log('User index:', userIndex, 'Date index:', dateIndex, 'Amount index:', amountIndex);
-    
     if (userIndex === -1 || dateIndex === -1 || amountIndex === -1) {
-      return { error: 'Required columns not found. Headers: ' + headers.join(', ') };
+      return { error: 'Required columns not found' };
     }
     
     let todayPayments = 0;
@@ -463,7 +474,6 @@ function getDailyStats(userEmail, date) {
     let totalAmount = 0;
     
     const targetDate = date || new Date().toLocaleDateString('en-PH');
-    console.log('Target date:', targetDate);
     
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
@@ -471,27 +481,23 @@ function getDailyStats(userEmail, date) {
       const submittedDate = row[dateIndex];
       const amount = parseFloat(row[amountIndex]) || 0;
       
-      console.log(`Row ${i}: receiverEmail="${receiverEmail}", submittedDate="${submittedDate}", amount=${amount}`);
-      
       if (receiverEmail === userEmail) {
         totalPayments++;
         totalAmount += amount;
         
         // Check if it's today's payment
         if (submittedDate) {
+          // Convert submittedDate to a comparable format
           const submittedDateStr = submittedDate.toString();
           const todayStr = new Date().toLocaleDateString('en-PH');
           
           if (submittedDateStr.includes(todayStr) || submittedDateStr.includes(new Date().getDate().toString())) {
             todayPayments++;
             todayAmount += amount;
-            console.log(`Found today's payment: ${amount}`);
           }
         }
       }
     }
-    
-    console.log(`Final stats: todayPayments=${todayPayments}, todayAmount=${todayAmount}, totalPayments=${totalPayments}, totalAmount=${totalAmount}`);
     
     return {
       todayPayments,

@@ -34,7 +34,7 @@ async function simulateFormSubmission(userId, attempt = 1) {
         const formData = {
             studentName: `Student ${userId}`,
             studentId: `STU${userId.toString().padStart(3, '0')}`,
-            email: `student${userId}@example.com`,
+            email: `student${userId}@g.cjc.edu.ph`,
             college: 'CCIS',
             course: 'Computer Science',
             paymentAmount: 200,

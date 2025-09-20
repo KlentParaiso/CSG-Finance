@@ -8,6 +8,7 @@ import {
   checkRateLimit,
   logSecurityEvent 
 } from '../utils/security';
+import DailyStats from './DailyStats';
 
 const StudentForm = ({ authenticatedUser }) => {
   const [formData, setFormData] = useState({
@@ -16,7 +17,7 @@ const StudentForm = ({ authenticatedUser }) => {
     email: '',
     college: '',
     course: '',
-    paymentAmount: '200',
+    paymentAmount: '180',
     paymentMethod: 'Cash',
     receivedBy: authenticatedUser ? authenticatedUser.name : '',
     customReceiver: ''
@@ -25,6 +26,7 @@ const StudentForm = ({ authenticatedUser }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   // Memoize options to prevent unnecessary re-renders
   const colleges = useMemo(() => [
@@ -54,6 +56,21 @@ const StudentForm = ({ authenticatedUser }) => {
       ...prev,
       [name]: sanitizedValue
     }));
+  }, []);
+
+  const handleEmailBlur = useCallback((e) => {
+    const { value } = e.target;
+    let sanitizedValue = sanitizeInput(value);
+    
+    // Auto-complete email domain for school emails only on blur
+    if (sanitizedValue && !sanitizedValue.includes('@') && !sanitizedValue.endsWith('@g.cjc.edu.ph')) {
+      sanitizedValue = sanitizedValue + '@g.cjc.edu.ph';
+      
+      setFormData(prev => ({
+        ...prev,
+        email: sanitizedValue
+      }));
+    }
   }, []);
 
   const validateForm = () => {
@@ -117,7 +134,7 @@ const StudentForm = ({ authenticatedUser }) => {
       return false;
     }
     
-    // Payment amount is fixed at 200 pesos, no validation needed
+    // Payment amount is fixed at 180 pesos, no validation needed
 
     if (!authenticatedUser) {
       setMessage('Authentication error. Please sign out and sign in again.');
@@ -179,6 +196,9 @@ const StudentForm = ({ authenticatedUser }) => {
       setMessage('Payment recorded successfully! Email confirmation sent to student.');
       setMessageType('success');
       
+      // Refresh dashboard statistics
+      setRefreshTrigger(prev => prev + 1);
+      
       // Reset form
       setFormData({
         studentName: '',
@@ -186,7 +206,7 @@ const StudentForm = ({ authenticatedUser }) => {
         email: '',
         college: '',
         course: '',
-        paymentAmount: '200',
+        paymentAmount: '180',
         paymentMethod: 'Cash',
         receivedBy: authenticatedUser ? authenticatedUser.name : '',
         customReceiver: ''
@@ -222,7 +242,9 @@ const StudentForm = ({ authenticatedUser }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
+      <DailyStats authenticatedUser={authenticatedUser} refreshTrigger={refreshTrigger} />
+      <form onSubmit={handleSubmit}>
       <div className="row">
         <div className="col-md-6 mb-3">
           <label htmlFor="studentName" className="form-label">
@@ -243,7 +265,7 @@ const StudentForm = ({ authenticatedUser }) => {
         
         <div className="col-md-6 mb-3">
           <label htmlFor="studentId" className="form-label">
-            <strong>Student ID</strong>
+            <strong>Race Bib Number</strong>
           </label>
           <input
             type="text"
@@ -252,7 +274,7 @@ const StudentForm = ({ authenticatedUser }) => {
             name="studentId"
             value={formData.studentId}
             onChange={handleInputChange}
-            placeholder="Enter student ID number"
+            placeholder="Enter race bib number"
             disabled={isLoading}
             required
           />
@@ -263,17 +285,27 @@ const StudentForm = ({ authenticatedUser }) => {
         <label htmlFor="email" className="form-label">
           <strong>Student Email</strong>
         </label>
-        <input
-          type="email"
-          className="form-control"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleInputChange}
-          placeholder="Enter student's email address"
-          disabled={isLoading}
-          required
-        />
+        <div className="position-relative">
+          <input
+            type="text"
+            className="form-control"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            onBlur={handleEmailBlur}
+            placeholder="Enter username"
+            disabled={isLoading}
+            required
+            style={{ paddingRight: '120px' }}
+          />
+          <span 
+            className="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted"
+            style={{ pointerEvents: 'none', fontSize: '14px' }}
+          >
+            @g.cjc.edu.ph
+          </span>
+        </div>
       </div>
       
       <div className="row">
@@ -327,13 +359,13 @@ const StudentForm = ({ authenticatedUser }) => {
             className="form-control"
             id="paymentAmount"
             name="paymentAmount"
-            value="200"
+            value="180"
             disabled={true}
             style={{ backgroundColor: '#e9ecef' }}
           />
           <div className="form-text">
             <i className="bi bi-info-circle me-1"></i>
-            Fun Run registration fee is fixed at ₱200.00
+            Fun Run registration fee is fixed at ₱180.00
           </div>
         </div>
         
@@ -406,6 +438,7 @@ const StudentForm = ({ authenticatedUser }) => {
         </button>
       </div>
     </form>
+    </div>
   );
 };
 

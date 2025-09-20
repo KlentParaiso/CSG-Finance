@@ -130,7 +130,7 @@ function testFixedValues() {
     
     let passed = 0;
     
-    if (paymentAmount && paymentAmount.value === '200' && paymentAmount.disabled) {
+    if (paymentAmount && paymentAmount.value === '180' && paymentAmount.disabled) {
       passed++;
     }
     
@@ -139,7 +139,7 @@ function testFixedValues() {
     }
     
     if (passed === 2) {
-      logTest('Fixed Values', true, 'Payment amount (₱200) and method (Cash) are fixed correctly');
+      logTest('Fixed Values', true, 'Payment amount (₱180) and method (Cash) are fixed correctly');
       return true;
     } else {
       logTest('Fixed Values', false, 'Fixed values not configured correctly');
@@ -292,7 +292,7 @@ function testConcurrentUserSupport() {
 function testGoogleSheetsIntegration() {
   try {
     // Check if Apps Script URL is configured
-    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbyqPr9OLfetto5vdbe__seFPKEOm1hORpSZXIXts-YWDTDQGAmPd7gdXJid8ixnzz69gA/exec';
+    const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwU02Ep88029L4c7WpNIy43AzYuH-8FXv1xq-Pmdxg84ZGM7xeHb3TwawoHW7Ys5oeslA/exec';
     
     if (appsScriptUrl && appsScriptUrl !== 'YOUR_GOOGLE_APPS_SCRIPT_URL') {
       logTest('Google Sheets Integration', true, 'Apps Script URL configured');

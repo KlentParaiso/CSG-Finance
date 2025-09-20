@@ -49,8 +49,8 @@ function testFixedValues() {
   let passed = 0;
   
   // Check payment amount
-  if (paymentAmount && paymentAmount.value === '200' && paymentAmount.disabled) {
-    console.log('✅ Payment amount: Fixed at ₱200 (disabled)');
+  if (paymentAmount && paymentAmount.value === '180' && paymentAmount.disabled) {
+    console.log('✅ Payment amount: Fixed at ₱180 (disabled)');
     passed++;
   } else {
     console.log('❌ Payment amount: Not fixed or not disabled');
@@ -224,7 +224,7 @@ function testFormReset() {
     email: '',
     college: '',
     course: '',
-    paymentAmount: '200',
+    paymentAmount: '180',
     paymentMethod: 'Cash'
   };
   

@@ -1,7 +1,7 @@
 // Fun Run Payment Tracking Service
 // Integrates with Google Sheets via Google Apps Script for automated email notifications
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyqPr9OLfetto5vdbe__seFPKEOm1hORpSZXIXts-YWDTDQGAmPd7gdXJid8ixnzz69gA/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxINcoSX4EGysjqmQrqrzH_ihoEJD2U1CD_PyJdZMRwoEWxz-_FBWj7JKwfsDGewzIeUw/exec';
 
 export const savePaymentToGoogleSheets = async (paymentData) => {
   try {

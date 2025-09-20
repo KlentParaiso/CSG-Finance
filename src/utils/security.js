@@ -49,16 +49,16 @@ export const sanitizeInput = (input) => {
     .replace(/on\w+=/gi, '') // Remove event handlers
     .replace(/data:/gi, '') // Remove data: protocol
     .replace(/vbscript:/gi, '') // Remove vbscript: protocol
-    .trim();
+    .replace(/\s+/g, ' '); // Replace multiple spaces with single space, but don't trim
 };
 
 /**
- * Validate email format
+ * Validate email format for school domain
  * @param {string} email - Email to validate
- * @returns {boolean} - Whether email is valid
+ * @returns {boolean} - Whether email is valid and from school domain
  */
 export const isValidEmail = (email) => {
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@g\.cjc\.edu\.ph$/;
   return emailRegex.test(email);
 };
 

@@ -27,11 +27,11 @@ This manual will guide you through using the CSG Finance payment tracking system
 The payment form includes the following fields:
 
 - **Student Name** - Full name of the student
-- **Student ID** - Student identification number
+- **Race Bib Number** - Race bib identification number
 - **Email** - Student's email address
 - **College** - Student's college/department
 - **Course** - Student's course/program
-- **Payment Amount** - Fixed at ₱200 (cannot be changed)
+- **Payment Amount** - Fixed at ₱180 (cannot be changed)
 - **Payment Method** - Fixed as "Cash" (cannot be changed)
 
 ### **Step-by-Step Payment Processing**
@@ -39,7 +39,7 @@ The payment form includes the following fields:
 #### **1. Enter Student Information**
 ```
 Student Name: [Enter full name]
-Student ID: [Enter student ID]
+Race Bib Number: [Enter race bib number]
 Email: [Enter email address]
 ```
 
@@ -52,7 +52,7 @@ Email: [Enter email address]
   - College of Computing and Information Sciences (CCIS)
 
 #### **3. Verify Payment Details**
-- **Payment Amount:** ₱200 (automatically set)
+- **Payment Amount:** ₱180 (automatically set)
 - **Payment Method:** Cash (automatically set)
 - **Received By:** Your name (automatically filled)
 
@@ -68,8 +68,8 @@ Email: [Enter email address]
 When payment is successfully recorded, you'll see:
 ```
 ✅ Payment recorded successfully!
-Student: [Name] - [Student ID]
-Amount: ₱200.00
+Student: [Name] - [Race Bib Number]
+Amount: ₱180.00
 Email confirmation sent to: [email]
 ```
 
@@ -91,8 +91,8 @@ The student will automatically receive an email with:
 - **Cause:** Student email is not properly formatted
 - **Solution:** Check email format (must include @domain.com)
 
-#### **"Student ID Invalid" Error**
-- **Cause:** Student ID format is incorrect
+#### **"Race Bib Number Invalid" Error**
+- **Cause:** Race bib number format is incorrect
 - **Solution:** Use alphanumeric characters, 3-20 characters long
 
 #### **"Network Error" Message**
@@ -175,7 +175,7 @@ You're now ready to use the CSG Finance Fun Run Payment Tracker. The system is d
 
 ### **Quick Reference**
 - **Login:** Use school Google account
-- **Payment Amount:** Always ₱200
+- **Payment Amount:** Always ₱180
 - **Payment Method:** Always Cash
 - **Session:** 24 hours
 - **Support:** Contact IT or administrator
