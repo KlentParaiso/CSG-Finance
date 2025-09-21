@@ -229,6 +229,8 @@ Dear ${data.studentName},
 
 Thank you for your payment towards the Fun Run event! 🎉
 
+This Fun Run for a Cause is an institutional event mandated by the COCOCOA Officers, in celebration of our beloved institution’s Foundation Day.
+
 PAYMENT CONFIRMATION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 👤 Student Name: ${data.studentName}
@@ -242,11 +244,12 @@ PAYMENT CONFIRMATION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Your payment of ₱${parseFloat(data.paymentAmount).toLocaleString('en-PH', { minimumFractionDigits: 2 })} has been successfully received and verified.
+
 You are now officially registered for the Fun Run event. Please keep this email as your confirmation receipt. 📧
 
 If you have any questions regarding your payment, feel free to contact me at ${staffEmail}.
 
-Thank you once again for your participation. We look forward to seeing you at the Fun Run! 🏃‍♀️💨
+Thank you once again for being a valuable part of this celebration. We can't wait to see you at the starting line!🏃‍♀️💨
 
 Best regards,
 ${staffName}
