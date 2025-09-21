@@ -37,7 +37,7 @@ This guide will help you set up Google OAuth authentication so only authorized s
    - App name: "Fun Run Payment Tracker"
    - User support email: Your admin email
    - Developer contact: Your admin email
-   - Authorized domains: Add "cjc.edu.ph" (or your school domain)
+   - Authorized domains: Add "g.cjc.edu.ph" (or your school domain)
    - Click "Save and Continue"
 
 3. **Scopes**
@@ -59,9 +59,11 @@ This guide will help you set up Google OAuth authentication so only authorized s
 2. **Set Authorized URLs**
    - Authorized JavaScript origins:
      - `http://localhost:3000` (for development)
+     - `https://localhost:3000` (for HTTPS development)
      - `https://your-domain.com` (for production)
    - Authorized redirect URIs:
      - `http://localhost:3000`
+     - `https://localhost:3000`
      - `https://your-domain.com`
 
 3. **Download Credentials**
@@ -77,12 +79,12 @@ This guide will help you set up Google OAuth authentication so only authorized s
    ```javascript
    constructor() {
      this.clientId = 'YOUR_ACTUAL_CLIENT_ID_HERE'; // Paste your Client ID
-     this.schoolDomain = 'cjc.edu.ph'; // Your school domain
+     this.schoolDomain = 'g.cjc.edu.ph'; // Your school domain
      this.authorizedUsers = new Set([
-       'staff1@cjc.edu.ph',
-       'staff2@cjc.edu.ph',
-       'finance@cjc.edu.ph',
-       'admin@cjc.edu.ph'
+       'staff1@g.cjc.edu.ph',
+       'staff2@g.cjc.edu.ph',
+       'finance@g.cjc.edu.ph',
+       'admin@g.cjc.edu.ph'
        // Add all authorized staff emails here
      ]);
    }
@@ -92,7 +94,7 @@ This guide will help you set up Google OAuth authentication so only authorized s
    
    Edit `src/components/AuthWrapper.js` line that says:
    ```javascript
-   Only accounts ending with @cjc.edu.ph are authorized
+   Only accounts ending with @g.cjc.edu.ph are authorized
    ```
    Change to your actual domain.
 
@@ -116,11 +118,11 @@ Update the `authorizedUsers` set in `authService.js` with actual staff emails:
 
 ```javascript
 this.authorizedUsers = new Set([
-  'john.doe@cjc.edu.ph',
-  'jane.smith@cjc.edu.ph',
-  'finance.office@cjc.edu.ph',
-  'student.council@cjc.edu.ph',
-  'admin@cjc.edu.ph'
+  'john.doe@g.cjc.edu.ph',
+  'jane.smith@g.cjc.edu.ph',
+  'finance.office@g.cjc.edu.ph',
+  'student.council@g.cjc.edu.ph',
+  'admin@g.cjc.edu.ph'
 ]);
 ```
 
@@ -129,7 +131,7 @@ this.authorizedUsers = new Set([
 ### ✅ What This Prevents:
 - **Fake Staff Names**: Only real Google accounts can sign in
 - **Unauthorized Access**: Only pre-approved emails can access
-- **Domain Restrictions**: Only @cjc.edu.ph accounts work
+- **Domain Restrictions**: Only @g.cjc.edu.ph accounts work
 - **Session Hijacking**: Google handles secure authentication
 - **Manual Manipulation**: No dropdown menus to fake
 
@@ -180,6 +182,7 @@ For production, make sure to:
 📊 **Complete Audit**: Every transaction tied to verified staff account
 🏫 **School Integration**: Works with existing GSuite infrastructure
 🚫 **Zero Manipulation**: Impossible to fake receiver information
+
 
 
 

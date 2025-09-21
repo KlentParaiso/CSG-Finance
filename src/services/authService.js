@@ -3,7 +3,7 @@
 
 class AuthService {
   constructor() {
-    this.clientId = '146947485392-99trhoboqijsifvoba8a8u21ofq3offh.apps.googleusercontent.com';
+    this.clientId = '146947485392-99trhoboqljsifvoba8a8u21ofq3offh.apps.googleusercontent.com';
     this.schoolDomain = 'g.cjc.edu.ph'; // Your school domain
     this.authorizedUsers = new Set([
       'klentparaiso@g.cjc.edu.ph', // Your actual email
@@ -11,6 +11,7 @@ class AuthService {
       'finance@g.cjc.edu.ph',
       'admin@g.cjc.edu.ph',
       'studentcouncil@g.cjc.edu.ph',
+      'constantinoarianna@g.cjc.edu.ph',
       'funrun@g.cjc.edu.ph'
       // Add more authorized staff emails here
     ]);

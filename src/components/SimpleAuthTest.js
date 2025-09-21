@@ -22,7 +22,7 @@ const SimpleAuthTest = () => {
         
         window.gapi.auth2.init({
           client_id: '146947485392-99trhoboqljsifvoba8a8u21ofq3offh.apps.googleusercontent.com',
-          hosted_domain: 'gcj.edu.ph'
+          hosted_domain: 'g.cjc.edu.ph'
         }).then(() => {
           console.log('Auth2 initialized successfully');
           setStatus('Google Auth initialized - Ready to test');
@@ -54,7 +54,7 @@ const SimpleAuthTest = () => {
 
     console.log('Attempting sign in...');
     authInstance.signIn({
-      hosted_domain: 'gcj.edu.ph'
+      hosted_domain: 'g.cjc.edu.ph'
     }).then((googleUser) => {
       console.log('Sign in successful!', googleUser);
       const profile = googleUser.getBasicProfile();
@@ -106,6 +106,7 @@ const SimpleAuthTest = () => {
 };
 
 export default SimpleAuthTest;
+
 
 
 
