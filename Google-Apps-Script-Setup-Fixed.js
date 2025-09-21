@@ -27,7 +27,8 @@ const DEPARTMENTS = {
   'CEDAS': 'College of Education, Arts and Sciences (CEDAS)',
   'CHS': 'College of Health Sciences (CHS)',
   'COE': 'College of Engineering (COE)',
-  'CCIS': 'College of Computing and Information Sciences (CCIS)'
+  'CCIS': 'College of Computing and Information Sciences (CCIS)',
+  'CSP': 'College of Special Programs (CSP)'
 };
 
 /**
@@ -105,6 +106,7 @@ function getOrCreateCollegeSheet(collegeName) {
       'Email',
       'College',
       'Course/Program',
+      'Year Level',
       'Payment Amount (₱)',
       'Payment Method',
       'Received By',
@@ -142,6 +144,7 @@ function saveToCollegeSheet(data) {
     data.email,
     data.college,
     data.course,
+    data.yearLevel || 'Not specified',
     data.paymentAmount,
     data.paymentMethod,
     data.receivedBy || 'Not specified',
@@ -172,6 +175,7 @@ function saveToMasterSheet(data) {
       'Email',
       'College',
       'Course/Program',
+      'Year Level',
       'Payment Amount (₱)',
       'Payment Method',
       'Received By',
@@ -200,6 +204,7 @@ function saveToMasterSheet(data) {
     data.email,
     data.college,
     data.course,
+    data.yearLevel || 'Not specified',
     data.paymentAmount,
     data.paymentMethod,
     data.receivedBy || 'Not specified',
@@ -229,7 +234,8 @@ Dear ${data.studentName},
 
 Thank you for your payment towards the Fun Run event! 🎉
 
-This Fun Run for a Cause is an institutional event mandated by the COCOCOA Officers, in celebration of our beloved institution’s Foundation Day.
+This Fun Run for a Cause is an institutional event mandated by the 
+COCOCOA Officers, in celebration of our beloved institution's Foundation Day.
 
 PAYMENT CONFIRMATION
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -237,6 +243,7 @@ PAYMENT CONFIRMATION
 🆔 Race Bib Number: ${data.studentId}
 🏛️ College: ${DEPARTMENTS[data.college] || data.college}
 📚 Course/Program: ${data.course}
+🎓 Year Level: ${data.yearLevel || 'Not specified'}
 💰 Payment Amount: ₱${parseFloat(data.paymentAmount).toLocaleString('en-PH', { minimumFractionDigits: 2 })}
 💳 Payment Method: ${data.paymentMethod}
 📅 Date & Time: ${data.submittedAt || new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila' })}

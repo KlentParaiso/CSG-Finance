@@ -21,7 +21,9 @@ class AuthService {
       'lovelyplania@g.cjc.edu.ph',
       'katelafuente@g.cjc.edu.ph',
       'francisamad@g.cjc.edu.ph',
-      'funrun@g.cjc.edu.ph'
+      'pamogasashley@g.cjc.edu.ph',
+      'sedimomika@g.cjc.edu.ph',
+      'michaelajabon@g.cjc.edu.ph'
       // Add more authorized staff emails here
     ]);
     this.currentUser = null;
@@ -68,8 +70,12 @@ class AuthService {
       }
 
       // Verify user is authorized
+      console.log('Checking authorization for email:', email);
+      console.log('Authorized users:', Array.from(this.authorizedUsers));
+      console.log('Is authorized:', this.authorizedUsers.has(email));
+      
       if (!this.authorizedUsers.has(email)) {
-        throw new Error('Access denied. You are not authorized to receive payments.');
+        throw new Error(`Access denied. You are not authorized to receive payments. Email: ${email}`);
       }
 
       this.currentUser = {

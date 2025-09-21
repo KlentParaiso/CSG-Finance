@@ -17,6 +17,7 @@ const StudentForm = ({ authenticatedUser }) => {
     email: '',
     college: '',
     course: '',
+    yearLevel: '',
     paymentAmount: '180',
     paymentMethod: 'Cash',
     receivedBy: authenticatedUser ? authenticatedUser.name : '',
@@ -34,10 +35,68 @@ const StudentForm = ({ authenticatedUser }) => {
     { value: 'CEDAS', label: 'College of Education, Arts and Sciences (CEDAS)' },
     { value: 'CHS', label: 'College of Health Sciences (CHS)' },
     { value: 'COE', label: 'College of Engineering (COE)' },
-    { value: 'CCIS', label: 'College of Computing and Information Sciences (CCIS)' }
+    { value: 'CCIS', label: 'College of Computing and Information Sciences (CCIS)' },
+    { value: 'CSP', label: 'College of Special Programs (CSP)' }
   ], []);
 
   const paymentMethods = useMemo(() => ['Cash', 'Bank Transfer', 'GCash', 'PayMaya', 'Check'], []);
+
+  // Year level options
+  const yearLevels = useMemo(() => [
+    { value: '1st Year', label: '1st Year' },
+    { value: '2nd Year', label: '2nd Year' },
+    { value: '3rd Year', label: '3rd Year' },
+    { value: '4th Year', label: '4th Year' },
+    { value: '5th Year', label: '5th Year' }
+  ], []);
+
+  // Course options by college
+  const courseOptions = useMemo(() => ({
+    'CHS': [
+      'BS in Nursing',
+      'BS in Medical Laboratory Science',
+      'BS in Radiologic Technology',
+      'BS in Pharmacology'
+    ],
+    'COE': [
+      'BSCE',
+      'BSECE',
+      'BSCPE'
+    ],
+    'CEDAS': [
+      'BS Psychology',
+      'BS Criminology',
+      'BS Mathematics',
+      'AB English',
+      'BSED English',
+      'BSED Filipino',
+      'BSED Mathematics',
+      'BSED Science',
+      'BECED',
+      'BEED',
+      'BPED',
+      'BTV-TED (Major in Automotive Technology)',
+      'BTV-TED (Major in Food and Service Management)'
+    ],
+    'CCIS': [
+      'IT',
+      'CS',
+      'BLIS'
+    ],
+    'CABE': [
+      'BSA',
+      'BSMA',
+      'BSHM',
+      'BSTM',
+      'BSBA - FM',
+      'BSBA - MM',
+      'BSBA - HRDM',
+      'BPA'
+    ],
+    'CSP': [
+      'None'
+    ]
+  }), []);
 
   // Enhanced input validation with security measures
 
@@ -52,10 +111,23 @@ const StudentForm = ({ authenticatedUser }) => {
       return;
     }
     
-    setFormData(prev => ({
-      ...prev,
-      [name]: sanitizedValue
-    }));
+    setFormData(prev => {
+      const newData = {
+        ...prev,
+        [name]: sanitizedValue
+      };
+      
+      // If college changes, reset course selection
+      if (name === 'college') {
+        if (sanitizedValue === 'CSP') {
+          newData.course = 'None';
+        } else {
+          newData.course = '';
+        }
+      }
+      
+      return newData;
+    });
   }, []);
 
   const handleEmailBlur = useCallback((e) => {
@@ -74,7 +146,7 @@ const StudentForm = ({ authenticatedUser }) => {
   }, []);
 
   const validateForm = () => {
-    const { studentName, studentId, email, college, course, paymentAmount } = formData;
+    const { studentName, studentId, email, college, course, yearLevel, paymentAmount } = formData;
     
     // Enhanced validation with security checks
     if (!studentName.trim()) {
@@ -123,13 +195,13 @@ const StudentForm = ({ authenticatedUser }) => {
     }
     
     if (!course.trim()) {
-      setMessage('Please enter the course/program');
+      setMessage('Please select the course/program');
       setMessageType('danger');
       return false;
     }
     
-    if (course.length > 100) {
-      setMessage('Course name is too long. Please keep it under 100 characters.');
+    if (!yearLevel) {
+      setMessage('Please select the year level');
       setMessageType('danger');
       return false;
     }
@@ -206,6 +278,7 @@ const StudentForm = ({ authenticatedUser }) => {
         email: '',
         college: '',
         course: '',
+        yearLevel: '',
         paymentAmount: '180',
         paymentMethod: 'Cash',
         receivedBy: authenticatedUser ? authenticatedUser.name : '',
@@ -335,17 +408,48 @@ const StudentForm = ({ authenticatedUser }) => {
           <label htmlFor="course" className="form-label">
             <strong>Course/Program</strong>
           </label>
-          <input
-            type="text"
-            className="form-control"
+          <select
+            className="form-select"
             id="course"
             name="course"
             value={formData.course}
             onChange={handleInputChange}
-            placeholder="Enter course or program"
+            disabled={isLoading || !formData.college || formData.college === 'CSP'}
+            required
+          >
+            <option value="">
+              {formData.college ? 'Select Course' : 'Select College First'}
+            </option>
+            {formData.college && courseOptions[formData.college]?.map(course => (
+              <option key={course} value={course}>
+                {course}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="row">
+        <div className="col-md-6 mb-3">
+          <label htmlFor="yearLevel" className="form-label">
+            <strong>Year Level</strong>
+          </label>
+          <select
+            className="form-select"
+            id="yearLevel"
+            name="yearLevel"
+            value={formData.yearLevel}
+            onChange={handleInputChange}
             disabled={isLoading}
             required
-          />
+          >
+            <option value="">Select Year Level</option>
+            {yearLevels.map(year => (
+              <option key={year.value} value={year.value}>
+                {year.label}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
