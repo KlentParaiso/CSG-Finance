@@ -12,6 +12,15 @@ class AuthService {
       'admin@g.cjc.edu.ph',
       'studentcouncil@g.cjc.edu.ph',
       'constantinoarianna@g.cjc.edu.ph',
+      'francisgillo@g.cjc.edu.ph',
+      'cometalucky@g.cjc.edu.ph',
+      'olaguerrhenzen@g.cjc.edu.ph',
+      'aicellausa@g.cjc.edu.ph',
+      'lafuentekeisha@g.cjc.edu.ph',
+      'clarkkimberlyvargas@g.cjc.edu.ph',
+      'lovelyplania@g.cjc.edu.ph',
+      'katelafuente@g.cjc.edu.ph',
+      'francisamad@g.cjc.edu.ph',
       'funrun@g.cjc.edu.ph'
       // Add more authorized staff emails here
     ]);
