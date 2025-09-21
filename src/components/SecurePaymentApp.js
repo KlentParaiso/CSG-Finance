@@ -194,10 +194,22 @@ const SecurePaymentApp = () => {
       const authorizedUsers = [
         'klentparaiso@g.cjc.edu.ph',
         'paraisoklent8@g.cjc.edu.ph',
-        'paraisoklent@g.cjc.edu.ph', 
         'finance@g.cjc.edu.ph',
         'admin@g.cjc.edu.ph',
-        'studentcouncil@g.cjc.edu.ph'
+        'studentcouncil@g.cjc.edu.ph',
+        'constantinoarianna@g.cjc.edu.ph',
+        'francisgillo@g.cjc.edu.ph',
+        'cometalucky@g.cjc.edu.ph',
+        'olaguerrhenzen@g.cjc.edu.ph',
+        'aicellausa@g.cjc.edu.ph',
+        'lafuentekeisha@g.cjc.edu.ph',
+        'clarkkimberlyvargas@g.cjc.edu.ph',
+        'lovelyplania@g.cjc.edu.ph',
+        'katelafuente@g.cjc.edu.ph',
+        'francisamad@g.cjc.edu.ph',
+        'pamogasashley@g.cjc.edu.ph',
+        'sedimomika@g.cjc.edu.ph',
+        'michaelajabon@g.cjc.edu.ph'
         // Add more authorized staff emails here
       ];
       
