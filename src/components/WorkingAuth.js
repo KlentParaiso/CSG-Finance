@@ -76,7 +76,10 @@ const WorkingAuth = () => {
         'francisamad@g.cjc.edu.ph',
         'pamogasashley@g.cjc.edu.ph',
         'sedimomika@g.cjc.edu.ph',
-        'michaelajabon@g.cjc.edu.ph'
+        'michaelajabon@g.cjc.edu.ph',
+        'jasonremoroza@g.cjc.edu.ph',
+        'diazjorex@g.cjc.edu.ph',
+        'tejadarobie@g.cjc.edu.ph'
         // Add more authorized emails here
       ];
       
