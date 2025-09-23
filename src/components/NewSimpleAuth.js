@@ -64,7 +64,10 @@ const NewSimpleAuth = () => {
       'michaelajabon@g.cjc.edu.ph',
       'jasonremoroza@g.cjc.edu.ph',
       'diazjorex@g.cjc.edu.ph',
-      'tejadarobie@g.cjc.edu.ph'
+      'tejadarobie@g.cjc.edu.ph',
+      'delacruz@g.cjc.edu.ph',
+      'gicamilleane@g.cjc.edu.ph',
+      'dieznicole@g.cjc.edu.ph'
       // Add more authorized emails here
     ];
     
