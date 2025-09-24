@@ -85,6 +85,7 @@ const StudentForm = ({ authenticatedUser }) => {
     ],
     'CABE': [
       'BSA',
+      'BSAIS',
       'BSMA',
       'BSHM',
       'BSTM',
