@@ -215,7 +215,9 @@ const SecurePaymentApp = () => {
         'tejadarobie@g.cjc.edu.ph',
         'delacruz@g.cjc.edu.ph',
         'gicamilleane@g.cjc.edu.ph',
-        'dieznicole@g.cjc.edu.ph'
+        'dieznicole@g.cjc.edu.ph',
+        'shannemagallanes@g.cjc.edu.ph',
+        'trishakayeamatosa@g.cjc.edu.ph'
         // Add more authorized staff emails here
       ];
       

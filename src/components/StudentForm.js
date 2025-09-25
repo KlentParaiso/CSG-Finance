@@ -56,7 +56,7 @@ const StudentForm = ({ authenticatedUser }) => {
       'BS in Nursing',
       'BS in Medical Laboratory Science',
       'BS in Radiologic Technology',
-      'BS in Pharmacology'
+      'BS in Pharmacy'
     ],
     'COE': [
       'BSCE',
